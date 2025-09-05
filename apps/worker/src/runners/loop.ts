@@ -42,7 +42,7 @@ export class LoopRunner {
           console.error(`Error executing loop child step ${childStep.id}:`, error);
           itemResults.push({
             stepId: childStep.id,
-            error: error.message,
+            error: (error as Error).message,
             credits: 0
           });
         }

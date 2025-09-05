@@ -44,7 +44,7 @@ export class WorkflowRunner {
       // Update run status to running
       await this.prisma.run.update({
         where: { id: runId },
-        data: { status: 'running' }
+        data: { status: 'RUNNING' }
       });
 
       // Create initial step records
@@ -60,7 +60,7 @@ export class WorkflowRunner {
           totalCredits += result.credits || 0;
           
           // Update step record
-          await this.updateStepRecord(stepRecords[step.id], 'completed', result.output, result.credits);
+          await this.updateStepRecord(stepRecords[step.id], 'COMPLETED', result.output, result.credits);
           
           // Update context with step output
           context[step.id] = result.output;
@@ -69,13 +69,13 @@ export class WorkflowRunner {
           console.error(`Error executing step ${step.id}:`, error);
           
           // Update step record with error
-          await this.updateStepRecord(stepRecords[step.id], 'failed', { error: error.message }, 0);
+          await this.updateStepRecord(stepRecords[step.id], 'FAILED', { error: (error as Error).message }, 0);
           
           // Update run status to failed
           await this.prisma.run.update({
             where: { id: runId },
             data: { 
-              status: 'failed',
+              status: 'FAILED',
               finishedAt: new Date()
             }
           });
@@ -88,7 +88,7 @@ export class WorkflowRunner {
       await this.prisma.run.update({
         where: { id: runId },
         data: { 
-          status: 'completed',
+          status: 'COMPLETED',
           finishedAt: new Date(),
           aiCredits: totalCredits
         }
@@ -103,7 +103,7 @@ export class WorkflowRunner {
       await this.prisma.run.update({
         where: { id: runId },
         data: { 
-          status: 'failed',
+          status: 'FAILED',
           finishedAt: new Date()
         }
       });
@@ -116,7 +116,7 @@ export class WorkflowRunner {
     console.log(`Executing step: ${step.id} (${step.type})`);
 
     // Update step status to running
-    await this.updateStepRecord(stepRecords[step.id], 'running');
+    await this.updateStepRecord(stepRecords[step.id], 'RUNNING');
 
     let result: any;
 
@@ -134,7 +134,7 @@ export class WorkflowRunner {
         result = await this.tableRunner.execute(step, context);
         break;
       case 'loop':
-        result = await this.loopRunner.execute(step, context, stepRecords);
+        result = await this.loopRunner.execute(step, context);
         break;
       case 'log':
         result = await this.logRunner.execute(step, context);
@@ -158,7 +158,7 @@ export class WorkflowRunner {
           name: step.name,
           type: step.type,
           input: step.input,
-          status: 'pending',
+          status: 'PENDING',
           startedAt: new Date()
         }
       });
@@ -169,14 +169,14 @@ export class WorkflowRunner {
     return stepRecords;
   }
 
-  private async updateStepRecord(stepRecord: any, status: string, output?: any, aiCredits?: number) {
+  private async updateStepRecord(stepRecord: any, status: 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'SKIPPED', output?: any, aiCredits?: number) {
     await this.prisma.runStep.update({
       where: { id: stepRecord.id },
       data: {
         status,
         output,
         aiCredits: aiCredits || 0,
-        finishedAt: status === 'completed' || status === 'failed' ? new Date() : undefined
+        finishedAt: status === 'COMPLETED' || status === 'FAILED' ? new Date() : undefined
       }
     });
   }

@@ -1,8 +1,8 @@
 import { Worker, QueueEvents, Job } from 'bullmq';
-import IORedis from 'ioredis';
+import { Redis } from 'ioredis';
 import { executeRun } from '../runners/executeRun';
 
-const connection = new IORedis(process.env.REDIS_URL ?? 'redis://localhost:6379', { maxRetriesPerRequest: null });
+const connection = new Redis(process.env.REDIS_URL ?? 'redis://localhost:6379', { maxRetriesPerRequest: null });
 
 export function startRunWorker() {
   const worker = new Worker('run.execute', async (job: Job) => {

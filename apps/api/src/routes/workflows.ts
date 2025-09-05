@@ -7,14 +7,15 @@ const workflowService = new WorkflowService();
 
 const createWorkflowSchema = z.object({
   name: z.string(),
-  definition: z.record(z.any()),
+  definition: z.record(z.string(), z.any()),
   schedule: z.string().optional(),
-  timezone: z.string().default('Europe/Paris')
+  timezone: z.string().default('Europe/Paris'),
+  userId: z.string()
 });
 
 const updateWorkflowSchema = z.object({
   name: z.string().optional(),
-  definition: z.record(z.any()).optional(),
+  definition: z.record(z.string(), z.any()).optional(),
   schedule: z.string().optional(),
   timezone: z.string().optional()
 });
@@ -66,7 +67,7 @@ export async function workflowRoutes(fastify: FastifyInstance) {
       return reply.status(201).send(workflow);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return reply.status(400).send({ error: 'Validation error', details: error.errors });
+        return reply.status(400).send({ error: 'Validation error', details: error.issues });
       }
       fastify.log.error(error);
       return reply.status(500).send({ error: 'Failed to create workflow' });
@@ -82,7 +83,7 @@ export async function workflowRoutes(fastify: FastifyInstance) {
       return reply.send(workflow);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return reply.status(400).send({ error: 'Validation error', details: error.errors });
+        return reply.status(400).send({ error: 'Validation error', details: error.issues });
       }
       fastify.log.error(error);
       return reply.status(500).send({ error: 'Failed to update workflow' });

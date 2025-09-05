@@ -62,7 +62,7 @@ export async function runRoutes(fastify: FastifyInstance) {
       return reply.status(201).send(run);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return reply.status(400).send({ error: 'Validation error', details: error.errors });
+        return reply.status(400).send({ error: 'Validation error', details: error.issues });
       }
       fastify.log.error(error);
       return reply.status(500).send({ error: 'Failed to start run' });

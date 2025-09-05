@@ -20,7 +20,7 @@ export async function emailRoutes(fastify: FastifyInstance) {
       return reply.send(result);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return reply.status(400).send({ error: 'Validation error', details: error.errors });
+        return reply.status(400).send({ error: 'Validation error', details: error.issues });
       }
       fastify.log.error(error);
       return reply.status(500).send({ error: 'Failed to send email' });

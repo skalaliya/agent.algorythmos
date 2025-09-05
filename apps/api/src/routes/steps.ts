@@ -41,7 +41,7 @@ export async function stepRoutes(fastify: FastifyInstance) {
   fastify.put('/:id', async (request: FastifyRequest<{ Params: { id: string }, Body: any }>, reply: FastifyReply) => {
     try {
       const { id } = request.params;
-      const { status, output, aiCredits, finishedAt } = request.body;
+      const { status, output, aiCredits, finishedAt } = request.body as any;
       
       const step = await prisma.runStep.update({
         where: { id },

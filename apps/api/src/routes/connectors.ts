@@ -18,7 +18,7 @@ export async function connectorRoutes(fastify: FastifyInstance) {
       return reply.send(posts);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return reply.status(400).send({ error: 'Validation error', details: error.errors });
+        return reply.status(400).send({ error: 'Validation error', details: error.issues });
       }
       fastify.log.error(error);
       return reply.status(500).send({ error: 'Failed to search LinkedIn posts' });

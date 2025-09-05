@@ -1,6 +1,6 @@
 import { prisma } from '../index';
 import { Queue } from 'bullmq';
-import Redis from 'ioredis';
+import { Redis } from 'ioredis';
 
 export class RunService {
   private queue: Queue;
@@ -27,7 +27,7 @@ export class RunService {
     const run = await prisma.run.create({
       data: {
         workflowId,
-        status: 'queued',
+        status: 'QUEUED',
         startedAt: new Date()
       }
     });
@@ -73,12 +73,12 @@ export class RunService {
     });
   }
 
-  async updateRunStatus(id: string, status: string, finishedAt?: Date) {
+  async updateRunStatus(id: string, status: 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'CANCELLED', finishedAt?: Date) {
     return prisma.run.update({
       where: { id },
       data: {
         status,
-        finishedAt: finishedAt || (status === 'completed' || status === 'failed' ? new Date() : undefined)
+        finishedAt: finishedAt || (status === 'COMPLETED' || status === 'FAILED' ? new Date() : undefined)
       }
     });
   }

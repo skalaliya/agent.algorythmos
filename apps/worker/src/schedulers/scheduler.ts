@@ -1,9 +1,9 @@
 import { nextFirstWednesdayAt8 } from '../utils/firstWed';
 import { prisma } from '../db/prisma';
 import { Queue } from 'bullmq';
-import IORedis from 'ioredis';
+import { Redis } from 'ioredis';
 
-const connection = new IORedis(process.env.REDIS_URL ?? 'redis://localhost:6379', { maxRetriesPerRequest: null });
+const connection = new Redis(process.env.REDIS_URL ?? 'redis://localhost:6379', { maxRetriesPerRequest: null });
 const runQueue = new Queue('run.execute', { connection });
 
 export async function startScheduler() {

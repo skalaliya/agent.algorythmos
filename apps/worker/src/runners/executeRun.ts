@@ -21,7 +21,7 @@ export async function executeRun(runId: string) {
     try {
       const input = resolveInput(step, ctx);
       const result = await runStep(step, input, ctx); // implement mapping to your existing runners
-      const aiCredits = Number(result?.aiCredits ?? 0);
+      const aiCredits = Number((result as any)?.aiCredits ?? 0);
       totalCredits += aiCredits;
 
       await prisma.runStep.create({

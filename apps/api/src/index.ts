@@ -2,9 +2,10 @@ import { resolve } from 'node:path';
 import * as dotenv from 'dotenv';
 dotenv.config({ path: resolve(process.cwd(), '../../.env') });
 
-import Fastify from 'fastify';
+import Fastify, { FastifyError } from 'fastify';
 import cors from '@fastify/cors';
 import { prisma } from './db/prisma';
+export { prisma };
 import { enqueueRun } from './queue/producer';
 
 async function main() {
@@ -20,10 +21,10 @@ async function main() {
     return { items: ws };
   });
 
-  app.get('/workflows/:id', async (req) => {
+  app.get('/workflows/:id', async (req, reply) => {
     const id = (req.params as { id: string }).id;
     const w = await prisma.workflow.findUnique({ where: { id } });
-    if (!w) return app.httpErrors.notFound('Workflow not found');
+    if (!w) return reply.status(404).send({ error: 'Workflow not found' });
     return w;
   });
 
@@ -39,20 +40,20 @@ async function main() {
     return { run };
   });
 
-  app.get('/runs/:id', async (req) => {
+  app.get('/runs/:id', async (req, reply) => {
     const id = (req.params as { id: string }).id;
     const run = await prisma.run.findUnique({
       where: { id },
       include: { steps: { orderBy: { index: 'asc' } } }
     });
-    if (!run) return app.httpErrors.notFound('Run not found');
+    if (!run) return reply.status(404).send({ error: 'Run not found' });
     return run;
   });
 
-  app.post('/runs/:id/retry', async (req) => {
+  app.post('/runs/:id/retry', async (req, reply) => {
     const id = (req.params as { id: string }).id;
     const run = await prisma.run.findUnique({ where: { id } });
-    if (!run) return app.httpErrors.notFound('Run not found');
+    if (!run) return reply.status(404).send({ error: 'Run not found' });
     
     const newRun = await prisma.run.create({
       data: {
@@ -71,10 +72,10 @@ async function main() {
     return { run: newRun };
   });
 
-  app.post('/runs/:id/cancel', async (req) => {
+  app.post('/runs/:id/cancel', async (req, reply) => {
     const id = (req.params as { id: string }).id;
     const run = await prisma.run.findUnique({ where: { id } });
-    if (!run) return app.httpErrors.notFound('Run not found');
+    if (!run) return reply.status(404).send({ error: 'Run not found' });
     
     await prisma.run.update({
       where: { id },

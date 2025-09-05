@@ -6,6 +6,7 @@ export interface CreateWorkflowData {
   definition: Record<string, any>;
   schedule?: string;
   timezone?: string;
+  userId: string;
 }
 
 export interface UpdateWorkflowData {
@@ -24,7 +25,8 @@ export class WorkflowService {
         name: data.name,
         definition: data.definition,
         schedule: data.schedule,
-        timezone: data.timezone || 'Europe/Paris'
+        timezone: data.timezone || 'Europe/Paris',
+        userId: data.userId
       }
     });
 
@@ -45,7 +47,7 @@ export class WorkflowService {
     // Update schedule if changed
     if (data.schedule !== undefined) {
       if (data.schedule) {
-        await this.triggerService.registerSchedule(id, data.schedule, data.timezone || workflow.timezone);
+        await this.triggerService.registerSchedule(id, data.schedule, data.timezone || workflow.timezone || 'Europe/Paris');
       } else {
         await this.triggerService.unregisterSchedule(id);
       }
@@ -74,7 +76,7 @@ export class WorkflowService {
     }
 
     if (enabled && workflow.schedule) {
-      await this.triggerService.registerSchedule(id, workflow.schedule, workflow.timezone);
+      await this.triggerService.registerSchedule(id, workflow.schedule, workflow.timezone || 'Europe/Paris');
     } else {
       await this.triggerService.unregisterSchedule(id);
     }

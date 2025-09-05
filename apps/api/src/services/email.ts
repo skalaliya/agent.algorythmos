@@ -11,7 +11,7 @@ export class EmailService {
   private transporter: nodemailer.Transporter;
 
   constructor() {
-    this.transporter = nodemailer.createTransporter({
+    this.transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST || 'mailhog',
       port: parseInt(process.env.MAIL_PORT || '1025'),
       secure: false,

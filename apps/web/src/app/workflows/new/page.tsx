@@ -3,8 +3,9 @@
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { TEMPLATES } from "@/data/templates";
+import { Suspense } from "react";
 
-export default function NewWorkflowPage() {
+function NewWorkflowContent() {
   const sp = useSearchParams();
   const slug = sp.get("template") ?? "";
   const t = TEMPLATES.find(x => x.slug === slug);
@@ -72,5 +73,23 @@ export default function NewWorkflowPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function NewWorkflowPage() {
+  return (
+    <Suspense fallback={
+      <main className="bg-canvas text-white">
+        <div className="mx-auto max-w-4xl px-6 py-12">
+          <div className="animate-pulse">
+            <div className="h-4 bg-white/20 rounded w-32 mb-4"></div>
+            <div className="h-8 bg-white/20 rounded w-64 mb-6"></div>
+            <div className="h-32 bg-white/10 rounded-2xl"></div>
+          </div>
+        </div>
+      </main>
+    }>
+      <NewWorkflowContent />
+    </Suspense>
   );
 }

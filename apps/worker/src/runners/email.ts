@@ -5,7 +5,7 @@ export class EmailRunner {
   private transporter: nodemailer.Transporter;
 
   constructor() {
-    this.transporter = nodemailer.createTransporter({
+    this.transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST || 'mailhog',
       port: parseInt(process.env.MAIL_PORT || '1025'),
       secure: false,
@@ -51,7 +51,7 @@ export class EmailRunner {
       };
     } catch (error) {
       console.error('Error sending email:', error);
-      throw new Error(`Failed to send email: ${error.message}`);
+      throw new Error(`Failed to send email: ${(error as Error).message}`);
     }
   }
 
