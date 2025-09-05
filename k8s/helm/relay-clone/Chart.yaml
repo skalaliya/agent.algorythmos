@@ -1,0 +1,19 @@
+apiVersion: v2
+name: relay-clone
+description: A Helm chart for Relay Clone - AI-powered workflow automation platform
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - workflow
+  - automation
+  - ai
+  - python
+  - fastapi
+  - celery
+home: https://github.com/your-org/relay-clone
+sources:
+  - https://github.com/your-org/relay-clone
+maintainers:
+  - name: Your Name
+    email: your.email@example.com

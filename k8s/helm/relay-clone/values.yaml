@@ -1,0 +1,175 @@
+# Default values for relay-clone
+# This is a YAML-formatted file.
+
+replicaCount: 1
+
+image:
+  repository: relay-clone
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  hosts:
+    - host: relay-clone.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Database configuration
+postgres:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "15"
+  persistence:
+    enabled: true
+    size: 10Gi
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+
+# Redis configuration
+redis:
+  enabled: true
+  image:
+    repository: redis
+    tag: "7"
+  persistence:
+    enabled: true
+    size: 5Gi
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+# API configuration
+api:
+  replicas: 2
+  image:
+    repository: relay-clone-api
+    tag: "latest"
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+
+# Worker configuration
+worker:
+  replicas: 2
+  image:
+    repository: relay-clone-worker
+    tag: "latest"
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+
+# Celery Beat configuration
+celeryBeat:
+  enabled: true
+  image:
+    repository: relay-clone-worker
+    tag: "latest"
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+# Web configuration
+web:
+  replicas: 2
+  image:
+    repository: relay-clone-web
+    tag: "latest"
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+
+# Configuration
+config:
+  database:
+    url: "postgresql://postgres:postgres@postgres-service:5432/relayclone"
+  redis:
+    url: "redis://redis-service:6379/0"
+  api:
+    host: "0.0.0.0"
+    port: "8000"
+  smtp:
+    server: "smtp.gmail.com"
+    port: "587"
+
+# Secrets (should be provided via external secret management)
+secrets:
+  openaiApiKey: ""
+  anthropicApiKey: ""
+  smtpUsername: ""
+  smtpPassword: ""
+  fromEmail: ""
+  linkedinAccessToken: ""
+  postgresPassword: "postgres"
