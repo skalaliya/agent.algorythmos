@@ -1,0 +1,76 @@
+{
+  "name": "LinkedIn Post Analyzer",
+  "timezone": "Europe/Paris",
+  "schedule": "FIRST_WED_08_CET",
+  "steps": [
+    {
+      "id": "s1",
+      "type": "table.constants",
+      "name": "Create table",
+      "input": {
+        "rows": [
+          {"topic": "Relay"}
+        ]
+      }
+    },
+    {
+      "id": "s2",
+      "type": "loop",
+      "name": "For each row",
+      "input": {
+        "items": "s1.rows",
+        "children": [
+          {
+            "id": "s2a",
+            "type": "ai",
+            "name": "AI Agent (Perplexity Sonar)",
+            "input": {
+              "provider": "perplexity",
+              "model": "sonar-reasoning-pro",
+              "prompt": "Research {{item.topic}} GTM evidence across LinkedIn/YouTube/Twitter/TikTok/SEO."
+            }
+          },
+          {
+            "id": "s2b",
+            "type": "linkedin.searchPosts",
+            "name": "Get LinkedIn posts",
+            "input": {
+              "query": "{{item.topic}}",
+              "limit": 10
+            }
+          },
+          {
+            "id": "s2c",
+            "type": "ai",
+            "name": "AI Agent (o3)",
+            "input": {
+              "provider": "openai",
+              "model": "o3",
+              "prompt": "Synthesize insights from {{s2a.output}} and {{s2b.output}}."
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "s3",
+      "type": "ai",
+      "name": "AI Agent (Claude Sonnet 4)",
+      "input": {
+        "provider": "anthropic",
+        "model": "claude-3-5-sonnet",
+        "prompt": "Write a single-company formatted report from loop outputs {{s2.*}}."
+      }
+    },
+    {
+      "id": "s4",
+      "type": "email.send",
+      "name": "Send email",
+      "input": {
+        "to": "me@example.com",
+        "subject": "LinkedIn Analyzer",
+        "html": "{{s3.output}}"
+      }
+    }
+  ]
+}

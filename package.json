@@ -1,0 +1,41 @@
+{
+  "name": "relay-clone",
+  "version": "1.0.0",
+  "description": "Relay.app-style automation MVP",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "prebuild": "bash scripts/check-app-router.sh",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "seed": "tsx scripts/seed.ts",
+    "smoke": "tsx scripts/smoke.e2e.ts",
+    "check-app-router": "bash scripts/check-app-router.sh",
+    "db:generate": "cd apps/api && prisma generate",
+    "db:migrate": "cd apps/api && prisma migrate dev",
+    "db:studio": "cd apps/api && prisma studio",
+    "prisma:generate": "cd apps/api && prisma generate",
+    "prisma:migrate": "cd apps/api && prisma migrate dev"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.13",
+    "tsx": "^4.0.0",
+    "turbo": "^1.10.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "dependencies": {
+    "bullmq": "^5.58.5",
+    "ioredis": "^5.7.0",
+    "lucide-react": "^0.542.0",
+    "luxon": "^3.7.1",
+    "next": "^15.5.1-canary.27",
+    "zod": "^4.1.5"
+  }
+}
