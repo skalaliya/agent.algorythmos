@@ -8,7 +8,7 @@ interface WorkflowEditPageProps {
 }
 
 export default async function WorkflowEditPage({ params }: WorkflowEditPageProps) {
-  const workflow = await api.get(`/workflows/${params.id}`);
+  const workflow = await api.get(`/api/workflows/${params.id}`);
 
   if (!workflow) {
     notFound();

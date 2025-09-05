@@ -2,7 +2,7 @@ import RunCard from '../../components/RunCard'
 import { api } from '../../lib/api'
 
 export default async function RunsPage() {
-  const runs = await api.get('/runs')
+  const runs = await api.get('/api/runs')
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">

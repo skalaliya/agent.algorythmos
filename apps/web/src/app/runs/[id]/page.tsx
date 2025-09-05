@@ -10,7 +10,7 @@ interface RunDetailPageProps {
 }
 
 export default async function RunDetailPage({ params }: RunDetailPageProps) {
-  const run = await api.get(`/runs/${params.id}`);
+  const run = await api.get(`/api/runs/${params.id}`);
 
   if (!run) {
     notFound();

@@ -43,7 +43,7 @@ export default function StepTimeline({
   const act = async (kind: 'retry' | 'cancel') => {
     setBusy(kind);
     try {
-      await api.post(`/runs/${runId}/${kind}`, {});
+      await api.post(`/api/runs/${runId}/${kind}`, {});
       onRefresh?.();
     } finally {
       setBusy(null);

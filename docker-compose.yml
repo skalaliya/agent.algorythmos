@@ -35,48 +35,115 @@ services:
       - "8025:8025"
       - "1025:1025"
 
-  api:
+  # Python FastAPI Backend
+  api-python:
     build:
-      context: ./apps/api
+      context: ./apps/api-python
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8000:8000"
     environment:
-      - NODE_ENV=development
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/relayclone
       - REDIS_URL=redis://redis:6379
-      - MAIL_HOST=mailhog
-      - MAIL_PORT=1025
-      - MAIL_FROM=Relay Clone <noreply@local.dev>
-      - DEFAULT_TZ=Europe/Paris
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - SMTP_SERVER=${SMTP_SERVER:-smtp.gmail.com}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - FROM_EMAIL=${FROM_EMAIL}
     volumes:
-      - ./apps/api:/app
-      - /app/node_modules
+      - ./apps/api-python:/app
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
-    command: npm run dev
 
-  worker:
+  # Python Celery Worker
+  worker-python:
     build:
-      context: ./apps/worker
+      context: ./apps/worker-python
       dockerfile: Dockerfile
     environment:
-      - NODE_ENV=development
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/relayclone
       - REDIS_URL=redis://redis:6379
-      - DEFAULT_TZ=Europe/Paris
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - SMTP_SERVER=${SMTP_SERVER:-smtp.gmail.com}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - FROM_EMAIL=${FROM_EMAIL}
+      - LINKEDIN_ACCESS_TOKEN=${LINKEDIN_ACCESS_TOKEN}
     volumes:
-      - ./apps/worker:/app
-      - /app/node_modules
+      - ./apps/worker-python:/app
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
-    command: npm run dev
+
+  # Celery Beat Scheduler
+  celery-beat:
+    build:
+      context: ./apps/worker-python
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/relayclone
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - ./apps/worker-python:/app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: celery -A celery_app beat --loglevel=info
+
+  # Legacy Node.js services (commented out)
+  # api:
+  #   build:
+  #     context: ./apps/api
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     - NODE_ENV=development
+  #     - DATABASE_URL=postgresql://postgres:postgres@db:5432/relayclone
+  #     - REDIS_URL=redis://redis:6379
+  #     - MAIL_HOST=mailhog
+  #     - MAIL_PORT=1025
+  #     - MAIL_FROM=Relay Clone <noreply@local.dev>
+  #     - DEFAULT_TZ=Europe/Paris
+  #   volumes:
+  #     - ./apps/api:/app
+  #     - /app/node_modules
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   command: npm run dev
+
+  # worker:
+  #   build:
+  #     context: ./apps/worker
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     - NODE_ENV=development
+  #     - DATABASE_URL=postgresql://postgres:postgres@db:5432/relayclone
+  #     - REDIS_URL=redis://redis:6379
+  #     - DEFAULT_TZ=Europe/Paris
+  #   volumes:
+  #     - ./apps/worker:/app
+  #     - /app/node_modules
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   command: npm run dev
 
   web:
     build:
@@ -86,13 +153,13 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://localhost:8080
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
     volumes:
       - ./apps/web:/app
       - /app/node_modules
       - /app/.next
     depends_on:
-      - api
+      - api-python
     command: npm run dev
 
 volumes:
