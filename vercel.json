@@ -1,7 +1,6 @@
 {
-  "buildCommand": "cd apps/web && npm run build",
+  "buildCommand": "npm run build --filter=@relay-clone/web",
   "outputDirectory": "apps/web/.next",
   "installCommand": "npm install",
-  "framework": "nextjs",
-  "rootDirectory": "apps/web"
+  "framework": "nextjs"
 }
