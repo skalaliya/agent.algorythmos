@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: relay-clone
+  name: algorythmos-ai-agents
   labels:
-    name: relay-clone
-    app: relay-clone
+    name: algorythmos-ai-agents
+    app: algorythmos-ai-agents

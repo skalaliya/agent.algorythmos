@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-python
-  namespace: relay-clone
+  namespace: algorythmos-ai-agents
   labels:
     app: api-python
 spec:
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: api-python
-        image: relay-clone-api:latest
+        image: algorythmos-ai-agents-api:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
@@ -25,57 +25,57 @@ spec:
         - name: DATABASE_URL
           valueFrom:
             configMapKeyRef:
-              name: relay-clone-config
+              name: algorythmos-ai-agents-config
               key: DATABASE_URL
         - name: REDIS_URL
           valueFrom:
             configMapKeyRef:
-              name: relay-clone-config
+              name: algorythmos-ai-agents-config
               key: REDIS_URL
         - name: API_HOST
           valueFrom:
             configMapKeyRef:
-              name: relay-clone-config
+              name: algorythmos-ai-agents-config
               key: API_HOST
         - name: API_PORT
           valueFrom:
             configMapKeyRef:
-              name: relay-clone-config
+              name: algorythmos-ai-agents-config
               key: API_PORT
         - name: SMTP_SERVER
           valueFrom:
             configMapKeyRef:
-              name: relay-clone-config
+              name: algorythmos-ai-agents-config
               key: SMTP_SERVER
         - name: SMTP_PORT
           valueFrom:
             configMapKeyRef:
-              name: relay-clone-config
+              name: algorythmos-ai-agents-config
               key: SMTP_PORT
         - name: OPENAI_API_KEY
           valueFrom:
             secretKeyRef:
-              name: relay-clone-secrets
+              name: algorythmos-ai-agents-secrets
               key: OPENAI_API_KEY
         - name: ANTHROPIC_API_KEY
           valueFrom:
             secretKeyRef:
-              name: relay-clone-secrets
+              name: algorythmos-ai-agents-secrets
               key: ANTHROPIC_API_KEY
         - name: SMTP_USERNAME
           valueFrom:
             secretKeyRef:
-              name: relay-clone-secrets
+              name: algorythmos-ai-agents-secrets
               key: SMTP_USERNAME
         - name: SMTP_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: relay-clone-secrets
+              name: algorythmos-ai-agents-secrets
               key: SMTP_PASSWORD
         - name: FROM_EMAIL
           valueFrom:
             secretKeyRef:
-              name: relay-clone-secrets
+              name: algorythmos-ai-agents-secrets
               key: FROM_EMAIL
         livenessProbe:
           httpGet:
@@ -101,7 +101,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: api-python-service
-  namespace: relay-clone
+  namespace: algorythmos-ai-agents
   labels:
     app: api-python
 spec:

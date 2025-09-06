@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Kubernetes deployment script for Relay Clone
+# Kubernetes deployment script for Algorythmos AI Agents
 set -e
 
-echo "🚀 Deploying Relay Clone to Kubernetes..."
+echo "🚀 Deploying Algorythmos AI Agents to Kubernetes..."
 
 # Check if kubectl is available
 if ! command -v kubectl &> /dev/null; then
@@ -26,53 +26,53 @@ fi
 echo "✅ Kubernetes cluster is accessible"
 
 # Create namespace if it doesn't exist
-kubectl create namespace relay-clone --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace algorythmos-ai-agents --dry-run=client -o yaml | kubectl apply -f -
 
 # Build and push Docker images (if not using external registry)
 echo "🐳 Building Docker images..."
-docker build -t relay-clone-api:latest ./apps/api-python/
-docker build -t relay-clone-worker:latest ./apps/worker-python/
-docker build -t relay-clone-web:latest ./apps/web/
+docker build -t algorythmos-ai-agents-api:latest ./apps/api-python/
+docker build -t algorythmos-ai-agents-worker:latest ./apps/worker-python/
+docker build -t algorythmos-ai-agents-web:latest ./apps/web/
 
 # Load images into kind/minikube if using local cluster
 if kubectl config current-context | grep -q "kind\|minikube"; then
     echo "📦 Loading images into local cluster..."
-    kind load docker-image relay-clone-api:latest --name kind 2>/dev/null || true
-    kind load docker-image relay-clone-worker:latest --name kind 2>/dev/null || true
-    kind load docker-image relay-clone-web:latest --name kind 2>/dev/null || true
+    kind load docker-image algorythmos-ai-agents-api:latest --name kind 2>/dev/null || true
+    kind load docker-image algorythmos-ai-agents-worker:latest --name kind 2>/dev/null || true
+    kind load docker-image algorythmos-ai-agents-web:latest --name kind 2>/dev/null || true
 fi
 
 # Deploy using Helm
 echo "📦 Deploying with Helm..."
-helm upgrade --install relay-clone ./k8s/helm/relay-clone \
-    --namespace relay-clone \
+helm upgrade --install algorythmos-ai-agents ./k8s/helm/algorythmos-ai-agents \
+    --namespace algorythmos-ai-agents \
     --create-namespace \
     --wait \
     --timeout=10m
 
 # Wait for deployments to be ready
 echo "⏳ Waiting for deployments to be ready..."
-kubectl wait --for=condition=available --timeout=300s deployment/api-python -n relay-clone
-kubectl wait --for=condition=available --timeout=300s deployment/worker-python -n relay-clone
-kubectl wait --for=condition=available --timeout=300s deployment/web -n relay-clone
+kubectl wait --for=condition=available --timeout=300s deployment/api-python -n algorythmos-ai-agents
+kubectl wait --for=condition=available --timeout=300s deployment/worker-python -n algorythmos-ai-agents
+kubectl wait --for=condition=available --timeout=300s deployment/web -n algorythmos-ai-agents
 
 # Show status
 echo "📊 Deployment Status:"
-kubectl get pods -n relay-clone
-kubectl get services -n relay-clone
+kubectl get pods -n algorythmos-ai-agents
+kubectl get services -n algorythmos-ai-agents
 
 echo ""
 echo "✅ Deployment completed successfully!"
 echo ""
 echo "🌐 Access URLs:"
 echo "   Local: http://localhost:3000 (port-forward)"
-echo "   Ingress: http://relay-clone.local (if ingress is configured)"
+echo "   Ingress: http://algorythmos-ai-agents.local (if ingress is configured)"
 echo ""
 echo "🔧 Useful commands:"
-echo "   kubectl port-forward -n relay-clone svc/web-service 3000:3000"
-echo "   kubectl port-forward -n relay-clone svc/api-python-service 8000:8000"
-echo "   kubectl logs -n relay-clone -l app=api-python -f"
-echo "   kubectl logs -n relay-clone -l app=worker-python -f"
+echo "   kubectl port-forward -n algorythmos-ai-agents svc/web-service 3000:3000"
+echo "   kubectl port-forward -n algorythmos-ai-agents svc/api-python-service 8000:8000"
+echo "   kubectl logs -n algorythmos-ai-agents -l app=api-python -f"
+echo "   kubectl logs -n algorythmos-ai-agents -l app=worker-python -f"
 echo ""
 echo "🛑 To delete deployment:"
-echo "   helm uninstall relay-clone -n relay-clone"
+echo "   helm uninstall algorythmos-ai-agents -n algorythmos-ai-agents"

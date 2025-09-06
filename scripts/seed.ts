@@ -10,10 +10,10 @@ async function main() {
   try {
     // Create demo user
     const user = await prisma.user.upsert({
-      where: { email: 'demo@relay-clone.com' },
+      where: { email: 'demo@algorythmos-ai-agents.com' },
       update: {},
       create: {
-        email: 'demo@relay-clone.com'
+        email: 'demo@algorythmos-ai-agents.com'
       }
     });
 

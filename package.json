@@ -1,5 +1,5 @@
 {
-  "name": "relay-clone",
+  "name": "algorythmos-ai-agents",
   "version": "1.0.0",
   "description": "AI-Powered Workflow Automation Platform",
   "private": true,
@@ -19,12 +19,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/Agent.algorythmos.git"
+    "url": "https://github.com/your-username/algorythmos-ai-agents.git"
   },
   "bugs": {
-    "url": "https://github.com/your-username/Agent.algorythmos/issues"
+    "url": "https://github.com/your-username/algorythmos-ai-agents/issues"
   },
-  "homepage": "https://github.com/your-username/Agent.algorythmos#readme",
+  "homepage": "https://github.com/your-username/algorythmos-ai-agents#readme",
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",

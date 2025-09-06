@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Start Python services for Relay Clone
-echo "🚀 Starting Relay Clone with Python backend..."
+# Start Python services for Algorythmos AI Agents
+echo "🚀 Starting Algorythmos AI Agents with Python backend..."
 
 # Check if .env file exists
 if [ ! -f .env ]; then

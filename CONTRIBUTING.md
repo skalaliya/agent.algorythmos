@@ -1,6 +1,6 @@
-# Contributing to Relay Clone
+# Contributing to Algorythmos AI Agents
 
-Thank you for your interest in contributing to Relay Clone! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to Algorythmos AI Agents! This document provides guidelines and information for contributors.
 
 ## 🚀 Getting Started
 
@@ -15,8 +15,8 @@ Thank you for your interest in contributing to Relay Clone! This document provid
 
 1. **Fork and Clone**
    ```bash
-   git clone https://github.com/your-username/Agent.algorythmos.git
-   cd Agent.algorythmos
+git clone https://github.com/your-username/algorythmos-ai-agents.git
+cd algorythmos-ai-agents
    ```
 
 2. **Install Dependencies**
@@ -53,7 +53,7 @@ Thank you for your interest in contributing to Relay Clone! This document provid
 ## 🏗️ Project Structure
 
 ```
-relay-clone/
+algorythmos-ai-agents/
 ├── apps/
 │   ├── web/                 # Next.js Frontend
 │   ├── api-python/          # FastAPI Backend
@@ -379,4 +379,4 @@ By contributing, you agree that your contributions will be licensed under the sa
 
 ---
 
-Thank you for contributing to Relay Clone! 🎉
+Thank you for contributing to Algorythmos AI Agents! 🎉

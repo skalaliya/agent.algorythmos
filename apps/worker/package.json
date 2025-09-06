@@ -1,5 +1,5 @@
 {
-  "name": "@relay-clone/worker",
+  "name": "@algorythmos-ai-agents/worker",
   "version": "1.0.0",
   "type": "module",
   "main": "dist/index.js",

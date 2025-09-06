@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: worker-python
-  namespace: relay-clone
+  namespace: algorythmos-ai-agents
   labels:
     app: worker-python
 spec:
@@ -17,68 +17,68 @@ spec:
     spec:
       containers:
       - name: worker-python
-        image: relay-clone-worker:latest
+        image: algorythmos-ai-agents-worker:latest
         imagePullPolicy: IfNotPresent
         env:
         - name: DATABASE_URL
           valueFrom:
             configMapKeyRef:
-              name: relay-clone-config
+              name: algorythmos-ai-agents-config
               key: DATABASE_URL
         - name: REDIS_URL
           valueFrom:
             configMapKeyRef:
-              name: relay-clone-config
+              name: algorythmos-ai-agents-config
               key: REDIS_URL
         - name: CELERY_BROKER_URL
           valueFrom:
             configMapKeyRef:
-              name: relay-clone-config
+              name: algorythmos-ai-agents-config
               key: CELERY_BROKER_URL
         - name: CELERY_RESULT_BACKEND
           valueFrom:
             configMapKeyRef:
-              name: relay-clone-config
+              name: algorythmos-ai-agents-config
               key: CELERY_RESULT_BACKEND
         - name: SMTP_SERVER
           valueFrom:
             configMapKeyRef:
-              name: relay-clone-config
+              name: algorythmos-ai-agents-config
               key: SMTP_SERVER
         - name: SMTP_PORT
           valueFrom:
             configMapKeyRef:
-              name: relay-clone-config
+              name: algorythmos-ai-agents-config
               key: SMTP_PORT
         - name: OPENAI_API_KEY
           valueFrom:
             secretKeyRef:
-              name: relay-clone-secrets
+              name: algorythmos-ai-agents-secrets
               key: OPENAI_API_KEY
         - name: ANTHROPIC_API_KEY
           valueFrom:
             secretKeyRef:
-              name: relay-clone-secrets
+              name: algorythmos-ai-agents-secrets
               key: ANTHROPIC_API_KEY
         - name: SMTP_USERNAME
           valueFrom:
             secretKeyRef:
-              name: relay-clone-secrets
+              name: algorythmos-ai-agents-secrets
               key: SMTP_USERNAME
         - name: SMTP_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: relay-clone-secrets
+              name: algorythmos-ai-agents-secrets
               key: SMTP_PASSWORD
         - name: FROM_EMAIL
           valueFrom:
             secretKeyRef:
-              name: relay-clone-secrets
+              name: algorythmos-ai-agents-secrets
               key: FROM_EMAIL
         - name: LINKEDIN_ACCESS_TOKEN
           valueFrom:
             secretKeyRef:
-              name: relay-clone-secrets
+              name: algorythmos-ai-agents-secrets
               key: LINKEDIN_ACCESS_TOKEN
         resources:
           requests:
@@ -92,7 +92,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: celery-beat
-  namespace: relay-clone
+  namespace: algorythmos-ai-agents
   labels:
     app: celery-beat
 spec:
@@ -107,29 +107,29 @@ spec:
     spec:
       containers:
       - name: celery-beat
-        image: relay-clone-worker:latest
+        image: algorythmos-ai-agents-worker:latest
         imagePullPolicy: IfNotPresent
         command: ["celery", "-A", "celery_app", "beat", "--loglevel=info"]
         env:
         - name: DATABASE_URL
           valueFrom:
             configMapKeyRef:
-              name: relay-clone-config
+              name: algorythmos-ai-agents-config
               key: DATABASE_URL
         - name: REDIS_URL
           valueFrom:
             configMapKeyRef:
-              name: relay-clone-config
+              name: algorythmos-ai-agents-config
               key: REDIS_URL
         - name: CELERY_BROKER_URL
           valueFrom:
             configMapKeyRef:
-              name: relay-clone-config
+              name: algorythmos-ai-agents-config
               key: CELERY_BROKER_URL
         - name: CELERY_RESULT_BACKEND
           valueFrom:
             configMapKeyRef:
-              name: relay-clone-config
+              name: algorythmos-ai-agents-config
               key: CELERY_RESULT_BACKEND
         resources:
           requests:

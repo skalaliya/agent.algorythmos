@@ -1,6 +1,6 @@
 # Installation Guide
 
-This guide will help you install and set up Relay Clone on your local machine or server.
+This guide will help you install and set up Algorythmos AI Agents on your local machine or server.
 
 ## 📋 Prerequisites
 
@@ -51,8 +51,8 @@ sudo usermod -aG docker $USER
 
 ### 2. Clone Repository
 ```bash
-git clone https://github.com/your-username/Agent.algorythmos.git
-cd Agent.algorythmos
+git clone https://github.com/your-username/algorythmos-ai-agents.git
+cd algorythmos-ai-agents
 ```
 
 ### 3. Environment Setup
@@ -220,7 +220,7 @@ Create a `.env` file with the following variables:
 
 ```bash
 # Database
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/relayclone
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/algorythmosaiagents
 
 # Redis
 REDIS_URL=redis://localhost:6379/0
@@ -269,7 +269,7 @@ LINKEDIN_ACCESS_TOKEN=your_linkedin_access_token
 docker-compose ps
 
 # Kubernetes
-kubectl get pods -n relay-clone
+kubectl get pods -n algorythmos-ai-agents
 ```
 
 ### 2. Test API
@@ -322,7 +322,7 @@ kill -9 <PID>
 docker-compose logs db
 
 # Test connection
-docker-compose exec db psql -U postgres -d relayclone -c "SELECT 1;"
+docker-compose exec db psql -U postgres -d algorythmosaiagents -c "SELECT 1;"
 ```
 
 #### API Key Issues

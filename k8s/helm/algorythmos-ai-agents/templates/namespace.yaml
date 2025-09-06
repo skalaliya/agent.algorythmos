@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   name: {{ .Release.Namespace }}
   labels:
-    {{- include "relay-clone.labels" . | nindent 4 }}
+    {{- include "algorythmos-ai-agents.labels" . | nindent 4 }}

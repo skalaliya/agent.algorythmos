@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "relay-clone.name" -}}
+{{- define "algorythmos-ai-agents.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "relay-clone.fullname" -}}
+{{- define "algorythmos-ai-agents.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "relay-clone.chart" -}}
+{{- define "algorythmos-ai-agents.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "relay-clone.labels" -}}
-helm.sh/chart: {{ include "relay-clone.chart" . }}
-{{ include "relay-clone.selectorLabels" . }}
+{{- define "algorythmos-ai-agents.labels" -}}
+helm.sh/chart: {{ include "algorythmos-ai-agents.chart" . }}
+{{ include "algorythmos-ai-agents.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "relay-clone.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "relay-clone.name" . }}
+{{- define "algorythmos-ai-agents.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "algorythmos-ai-agents.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "relay-clone.serviceAccountName" -}}
+{{- define "algorythmos-ai-agents.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "relay-clone.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "algorythmos-ai-agents.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}

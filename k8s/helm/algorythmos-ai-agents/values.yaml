@@ -1,10 +1,10 @@
-# Default values for relay-clone
+# Default values for algorythmos-ai-agents
 # This is a YAML-formatted file.
 
 replicaCount: 1
 
 image:
-  repository: relay-clone
+  repository: algorythmos-ai-agents
   pullPolicy: IfNotPresent
   tag: "latest"
 
@@ -34,7 +34,7 @@ ingress:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
   hosts:
-    - host: relay-clone.local
+    - host: algorythmos-ai-agents.local
       paths:
         - path: /
           pathType: Prefix
@@ -99,7 +99,7 @@ redis:
 api:
   replicas: 2
   image:
-    repository: relay-clone-api
+    repository: algorythmos-ai-agents-api
     tag: "latest"
   resources:
     limits:
@@ -113,7 +113,7 @@ api:
 worker:
   replicas: 2
   image:
-    repository: relay-clone-worker
+    repository: algorythmos-ai-agents-worker
     tag: "latest"
   resources:
     limits:
@@ -127,7 +127,7 @@ worker:
 celeryBeat:
   enabled: true
   image:
-    repository: relay-clone-worker
+    repository: algorythmos-ai-agents-worker
     tag: "latest"
   resources:
     limits:
@@ -141,7 +141,7 @@ celeryBeat:
 web:
   replicas: 2
   image:
-    repository: relay-clone-web
+    repository: algorythmos-ai-agents-web
     tag: "latest"
   resources:
     limits:
@@ -154,7 +154,7 @@ web:
 # Configuration
 config:
   database:
-    url: "postgresql://postgres:postgres@postgres-service:5432/relayclone"
+    url: "postgresql://postgres:postgres@postgres-service:5432/algorythmosaiagents"
   redis:
     url: "redis://redis-service:6379/0"
   api:

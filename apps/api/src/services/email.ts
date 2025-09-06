@@ -25,7 +25,7 @@ export class EmailService {
   async sendEmail(data: EmailData): Promise<{ success: boolean; messageId: string }> {
     try {
       const mailOptions = {
-        from: process.env.MAIL_FROM || 'Relay Clone <noreply@local.dev>',
+        from: process.env.MAIL_FROM || 'Algorythmos AI Agents <noreply@local.dev>',
         to: data.to,
         subject: data.subject,
         html: data.html,

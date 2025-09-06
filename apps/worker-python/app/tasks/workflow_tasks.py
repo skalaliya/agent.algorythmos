@@ -15,7 +15,7 @@ from ..runners.connector_runner import ConnectorRunner
 load_dotenv()
 
 # Database setup
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/relayclone")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/algorythmosaiagents")
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

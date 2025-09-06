@@ -1,6 +1,6 @@
 # System Architecture
 
-This document provides a comprehensive overview of Relay Clone's system architecture, components, and data flow.
+This document provides a comprehensive overview of Algorythmos AI Agents' system architecture, components, and data flow.
 
 ## 🏗️ High-Level Architecture
 

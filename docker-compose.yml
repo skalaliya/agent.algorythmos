@@ -4,7 +4,7 @@ services:
   db:
     image: postgres:15
     environment:
-      POSTGRES_DB: relayclone
+      POSTGRES_DB: algorythmosaiagents
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
@@ -43,7 +43,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/relayclone
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/algorythmosaiagents
       - REDIS_URL=redis://redis:6379
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
@@ -66,7 +66,7 @@ services:
       context: ./apps/worker-python
       dockerfile: Dockerfile
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/relayclone
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/algorythmosaiagents
       - REDIS_URL=redis://redis:6379
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
@@ -90,7 +90,7 @@ services:
       context: ./apps/worker-python
       dockerfile: Dockerfile
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/relayclone
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/algorythmosaiagents
       - REDIS_URL=redis://redis:6379
     volumes:
       - ./apps/worker-python:/app
@@ -110,11 +110,11 @@ services:
   #     - "8080:8080"
   #   environment:
   #     - NODE_ENV=development
-  #     - DATABASE_URL=postgresql://postgres:postgres@db:5432/relayclone
+  #     - DATABASE_URL=postgresql://postgres:postgres@db:5432/algorythmosaiagents
   #     - REDIS_URL=redis://redis:6379
   #     - MAIL_HOST=mailhog
   #     - MAIL_PORT=1025
-  #     - MAIL_FROM=Relay Clone <noreply@local.dev>
+  #     - MAIL_FROM=Algorythmos AI Agents <noreply@local.dev>
   #     - DEFAULT_TZ=Europe/Paris
   #   volumes:
   #     - ./apps/api:/app
@@ -132,7 +132,7 @@ services:
   #     dockerfile: Dockerfile
   #   environment:
   #     - NODE_ENV=development
-  #     - DATABASE_URL=postgresql://postgres:postgres@db:5432/relayclone
+  #     - DATABASE_URL=postgresql://postgres:postgres@db:5432/algorythmosaiagents
   #     - REDIS_URL=redis://redis:6379
   #     - DEFAULT_TZ=Europe/Paris
   #   volumes:

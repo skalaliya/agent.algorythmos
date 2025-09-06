@@ -1,0 +1,19 @@
+apiVersion: v2
+name: algorythmos-ai-agents
+description: A Helm chart for Algorythmos AI Agents - AI-powered workflow automation platform
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - workflow
+  - automation
+  - ai
+  - python
+  - fastapi
+  - celery
+home: https://github.com/your-org/algorythmos-ai-agents
+sources:
+  - https://github.com/your-org/algorythmos-ai-agents
+maintainers:
+  - name: Your Name
+    email: your.email@example.com

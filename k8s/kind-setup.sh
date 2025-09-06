@@ -31,7 +31,7 @@ fi
 
 # Create kind cluster
 echo "🏗️  Creating Kind cluster..."
-kind create cluster --name relay-clone --config - <<EOF
+kind create cluster --name algorythmos-ai-agents --config - <<EOF
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
@@ -84,7 +84,7 @@ helm repo update
 echo "✅ Kind cluster setup completed!"
 echo ""
 echo "🔧 Cluster info:"
-kubectl cluster-info --context kind-relay-clone
+kubectl cluster-info --context kind-algorythmos-ai-agents
 echo ""
 echo "📊 Node status:"
 kubectl get nodes
@@ -92,8 +92,8 @@ echo ""
 echo "🌐 Ingress controller status:"
 kubectl get pods -n ingress-nginx
 echo ""
-echo "🚀 Ready to deploy Relay Clone!"
+echo "🚀 Ready to deploy Algorythmos AI Agents!"
 echo "   Run: ./k8s/deploy.sh"
 echo ""
 echo "🛑 To delete cluster:"
-echo "   kind delete cluster --name relay-clone"
+echo "   kind delete cluster --name algorythmos-ai-agents"

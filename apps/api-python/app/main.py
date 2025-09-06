@@ -13,8 +13,8 @@ from .routes import workflows, runs, steps, connectors, email
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="Relay Clone API",
-    description="Python FastAPI backend for Relay Clone",
+    title="Algorythmos AI Agents API",
+    description="Python FastAPI backend for Algorythmos AI Agents",
     version="1.0.0"
 )
 
@@ -36,11 +36,11 @@ app.include_router(email.router, prefix="/api/email", tags=["email"])
 
 @app.get("/")
 async def root():
-    return {"message": "Relay Clone API is running"}
+    return {"message": "Algorythmos AI Agents API is running"}
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy", "service": "relay-clone-api"}
+    return {"status": "healthy", "service": "algorythmos-ai-agents-api"}
 
 @app.get("/api/workflows", response_model=List[schemas.Workflow])
 async def get_workflows(

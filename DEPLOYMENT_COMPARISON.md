@@ -1,6 +1,6 @@
 # Deployment Options Comparison
 
-This document compares the different deployment options available for Relay Clone: Docker Compose, Kubernetes, and their respective benefits.
+This document compares the different deployment options available for Algorythmos AI Agents: Docker Compose, Kubernetes, and their respective benefits.
 
 ## 🐳 Docker Compose vs ☸️ Kubernetes
 
@@ -78,7 +78,7 @@ Storage: Persistent volumes with replication
 ```bash
 # 1. Clone repository
 git clone <repo>
-cd relay-clone
+cd algorythmos-ai-agents
 
 # 2. Configure environment
 cp env.python.example .env
@@ -103,7 +103,7 @@ docker-compose up -d
 ./k8s/deploy.sh
 
 # 3. Access application
-kubectl port-forward -n relay-clone svc/web-service 3000:3000
+kubectl port-forward -n algorythmos-ai-agents svc/web-service 3000:3000
 # Frontend: http://localhost:3000
 # API: http://localhost:8000
 ```
@@ -131,16 +131,16 @@ docker-compose down
 vim apps/api-python/app/main.py
 
 # Build new image
-docker build -t relay-clone-api:v2.0 ./apps/api-python/
+docker build -t algorythmos-ai-agents-api:v2.0 ./apps/api-python/
 
 # Update deployment
-kubectl set image deployment/api-python api-python=relay-clone-api:v2.0 -n relay-clone
+kubectl set image deployment/api-python api-python=algorythmos-ai-agents-api:v2.0 -n algorythmos-ai-agents
 
 # View logs
-kubectl logs -n relay-clone -l app=api-python -f
+kubectl logs -n algorythmos-ai-agents -l app=api-python -f
 
 # Rollback if needed
-kubectl rollout undo deployment/api-python -n relay-clone
+kubectl rollout undo deployment/api-python -n algorythmos-ai-agents
 ```
 
 ## 📈 Scaling Comparison
@@ -160,10 +160,10 @@ docker-compose up -d --scale api-python=3
 ### Kubernetes Scaling
 ```bash
 # Horizontal Pod Autoscaler
-kubectl autoscale deployment api-python --cpu-percent=70 --min=2 --max=10 -n relay-clone
+kubectl autoscale deployment api-python --cpu-percent=70 --min=2 --max=10 -n algorythmos-ai-agents
 
 # Manual scaling
-kubectl scale deployment api-python --replicas=5 -n relay-clone
+kubectl scale deployment api-python --replicas=5 -n algorythmos-ai-agents
 
 # Benefits:
 # - Automatic load balancing
@@ -242,8 +242,8 @@ Consider using both:
 ./k8s/deploy.sh
 
 # 3. Deploy to production Kubernetes
-helm upgrade --install relay-clone ./k8s/helm/relay-clone \
-    --namespace relay-clone \
+helm upgrade --install algorythmos-ai-agents ./k8s/helm/algorythmos-ai-agents \
+    --namespace algorythmos-ai-agents \
     --create-namespace
 ```
 

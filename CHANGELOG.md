@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2024-01-15
 
 ### Added
-- Initial release of Relay Clone
+- Initial release of Algorythmos AI Agents
 - AI-powered workflow automation platform
 - Visual workflow builder with drag-and-drop interface
 - Support for OpenAI GPT and Anthropic Claude models

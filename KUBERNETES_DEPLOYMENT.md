@@ -1,12 +1,12 @@
 # Kubernetes Deployment Guide
 
-This guide covers deploying Relay Clone to Kubernetes, providing better scalability, high availability, and production-ready features compared to Docker Compose.
+This guide covers deploying Algorythmos AI Agents to Kubernetes, providing better scalability, high availability, and production-ready features compared to Docker Compose.
 
 ## 🏗️ Architecture Overview
 
 ### Kubernetes Components
 
-- **Namespace**: `relay-clone` - Isolates all resources
+- **Namespace**: `algorythmos-ai-agents` - Isolates all resources
 - **ConfigMaps**: Configuration data (non-sensitive)
 - **Secrets**: Sensitive data (API keys, passwords)
 - **Deployments**: Application replicas with auto-scaling
@@ -59,8 +59,8 @@ This guide covers deploying Relay Clone to Kubernetes, providing better scalabil
 kubectl config use-context your-production-cluster
 
 # Deploy with Helm
-helm upgrade --install relay-clone ./k8s/helm/relay-clone \
-    --namespace relay-clone \
+helm upgrade --install algorythmos-ai-agents ./k8s/helm/algorythmos-ai-agents \
+    --namespace algorythmos-ai-agents \
     --create-namespace \
     --set secrets.openaiApiKey="your-key" \
     --set secrets.anthropicApiKey="your-key" \
@@ -73,7 +73,7 @@ helm upgrade --install relay-clone ./k8s/helm/relay-clone \
 ### 1. Create Namespace
 
 ```bash
-kubectl create namespace relay-clone
+kubectl create namespace algorythmos-ai-agents
 ```
 
 ### 2. Apply ConfigMaps and Secrets
@@ -92,8 +92,8 @@ kubectl apply -f k8s/manifests/postgres.yaml
 kubectl apply -f k8s/manifests/redis.yaml
 
 # Wait for them to be ready
-kubectl wait --for=condition=available --timeout=300s deployment/postgres -n relay-clone
-kubectl wait --for=condition=available --timeout=300s deployment/redis -n relay-clone
+kubectl wait --for=condition=available --timeout=300s deployment/postgres -n algorythmos-ai-agents
+kubectl wait --for=condition=available --timeout=300s deployment/redis -n algorythmos-ai-agents
 ```
 
 ### 4. Deploy Applications
@@ -105,9 +105,9 @@ kubectl apply -f k8s/manifests/worker-python.yaml
 kubectl apply -f k8s/manifests/web.yaml
 
 # Wait for deployments
-kubectl wait --for=condition=available --timeout=300s deployment/api-python -n relay-clone
-kubectl wait --for=condition=available --timeout=300s deployment/worker-python -n relay-clone
-kubectl wait --for=condition=available --timeout=300s deployment/web -n relay-clone
+kubectl wait --for=condition=available --timeout=300s deployment/api-python -n algorythmos-ai-agents
+kubectl wait --for=condition=available --timeout=300s deployment/worker-python -n algorythmos-ai-agents
+kubectl wait --for=condition=available --timeout=300s deployment/web -n algorythmos-ai-agents
 ```
 
 ### 5. Configure Ingress
@@ -170,28 +170,28 @@ resources:
 
 ```bash
 # Access web interface
-kubectl port-forward -n relay-clone svc/web-service 3000:3000
+kubectl port-forward -n algorythmos-ai-agents svc/web-service 3000:3000
 
 # Access API directly
-kubectl port-forward -n relay-clone svc/api-python-service 8000:8000
+kubectl port-forward -n algorythmos-ai-agents svc/api-python-service 8000:8000
 
 # Access API documentation
-kubectl port-forward -n relay-clone svc/api-python-service 8000:8000
+kubectl port-forward -n algorythmos-ai-agents svc/api-python-service 8000:8000
 # Then visit: http://localhost:8000/docs
 ```
 
 ### 2. Ingress (Production)
 
 With ingress configured, access via:
-- Web: `http://relay-clone.local`
-- API: `http://api.relay-clone.local`
-- API Docs: `http://api.relay-clone.local/docs`
+- Web: `http://algorythmos-ai-agents.local`
+- API: `http://api.algorythmos-ai-agents.local`
+- API Docs: `http://api.algorythmos-ai-agents.local/docs`
 
 ### 3. LoadBalancer Service
 
 ```bash
 # Expose API via LoadBalancer
-kubectl expose deployment api-python -n relay-clone --type=LoadBalancer --port=8000
+kubectl expose deployment api-python -n algorythmos-ai-agents --type=LoadBalancer --port=8000
 ```
 
 ## 📊 Monitoring and Logs
@@ -200,29 +200,29 @@ kubectl expose deployment api-python -n relay-clone --type=LoadBalancer --port=8
 
 ```bash
 # API logs
-kubectl logs -n relay-clone -l app=api-python -f
+kubectl logs -n algorythmos-ai-agents -l app=api-python -f
 
 # Worker logs
-kubectl logs -n relay-clone -l app=worker-python -f
+kubectl logs -n algorythmos-ai-agents -l app=worker-python -f
 
 # Web logs
-kubectl logs -n relay-clone -l app=web -f
+kubectl logs -n algorythmos-ai-agents -l app=web -f
 
 # All logs
-kubectl logs -n relay-clone --all-containers=true -f
+kubectl logs -n algorythmos-ai-agents --all-containers=true -f
 ```
 
 ### Monitor Resources
 
 ```bash
 # Pod status
-kubectl get pods -n relay-clone
+kubectl get pods -n algorythmos-ai-agents
 
 # Service status
-kubectl get services -n relay-clone
+kubectl get services -n algorythmos-ai-agents
 
 # Resource usage
-kubectl top pods -n relay-clone
+kubectl top pods -n algorythmos-ai-agents
 kubectl top nodes
 ```
 
@@ -230,10 +230,10 @@ kubectl top nodes
 
 ```bash
 # Check API health
-kubectl exec -n relay-clone deployment/api-python -- curl http://localhost:8000/health
+kubectl exec -n algorythmos-ai-agents deployment/api-python -- curl http://localhost:8000/health
 
 # Check database connectivity
-kubectl exec -n relay-clone deployment/postgres -- pg_isready -U postgres
+kubectl exec -n algorythmos-ai-agents deployment/postgres -- pg_isready -U postgres
 ```
 
 ## 🔄 Updates and Rollbacks
@@ -242,20 +242,20 @@ kubectl exec -n relay-clone deployment/postgres -- pg_isready -U postgres
 
 ```bash
 # Update with new image
-kubectl set image deployment/api-python api-python=relay-clone-api:v2.0 -n relay-clone
+kubectl set image deployment/api-python api-python=algorythmos-ai-agents-api:v2.0 -n algorythmos-ai-agents
 
 # Or using Helm
-helm upgrade relay-clone ./k8s/helm/relay-clone -n relay-clone
+helm upgrade algorythmos-ai-agents ./k8s/helm/algorythmos-ai-agents -n algorythmos-ai-agents
 ```
 
 ### Rollback
 
 ```bash
 # Rollback to previous version
-kubectl rollout undo deployment/api-python -n relay-clone
+kubectl rollout undo deployment/api-python -n algorythmos-ai-agents
 
 # Or using Helm
-helm rollback relay-clone 1 -n relay-clone
+helm rollback algorythmos-ai-agents 1 -n algorythmos-ai-agents
 ```
 
 ## 🛡️ Security Considerations
@@ -272,8 +272,8 @@ helm rollback relay-clone 1 -n relay-clone
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: relay-clone-netpol
-  namespace: relay-clone
+  name: algorythmos-ai-agents-netpol
+  namespace: algorythmos-ai-agents
 spec:
   podSelector: {}
   policyTypes:
@@ -283,12 +283,12 @@ spec:
   - from:
     - namespaceSelector:
         matchLabels:
-          name: relay-clone
+          name: algorythmos-ai-agents
   egress:
   - to:
     - namespaceSelector:
         matchLabels:
-          name: relay-clone
+          name: algorythmos-ai-agents
 ```
 
 ### 3. RBAC
@@ -297,8 +297,8 @@ spec:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  namespace: relay-clone
-  name: relay-clone-role
+  namespace: algorythmos-ai-agents
+  name: algorythmos-ai-agents-role
 rules:
 - apiGroups: [""]
   resources: ["pods", "services", "configmaps", "secrets"]
@@ -311,40 +311,40 @@ rules:
 
 1. **Pod CrashLoopBackOff**
    ```bash
-   kubectl describe pod <pod-name> -n relay-clone
-   kubectl logs <pod-name> -n relay-clone --previous
+   kubectl describe pod <pod-name> -n algorythmos-ai-agents
+   kubectl logs <pod-name> -n algorythmos-ai-agents --previous
    ```
 
 2. **Service Not Accessible**
    ```bash
-   kubectl get endpoints -n relay-clone
-   kubectl describe service <service-name> -n relay-clone
+   kubectl get endpoints -n algorythmos-ai-agents
+   kubectl describe service <service-name> -n algorythmos-ai-agents
    ```
 
 3. **Database Connection Issues**
    ```bash
-   kubectl exec -n relay-clone deployment/postgres -- psql -U postgres -d relayclone -c "SELECT 1;"
+   kubectl exec -n algorythmos-ai-agents deployment/postgres -- psql -U postgres -d algorythmosaiagents -c "SELECT 1;"
    ```
 
 4. **Redis Connection Issues**
    ```bash
-   kubectl exec -n relay-clone deployment/redis -- redis-cli ping
+   kubectl exec -n algorythmos-ai-agents deployment/redis -- redis-cli ping
    ```
 
 ### Debug Commands
 
 ```bash
 # Get all resources
-kubectl get all -n relay-clone
+kubectl get all -n algorythmos-ai-agents
 
 # Describe problematic resource
-kubectl describe <resource-type> <resource-name> -n relay-clone
+kubectl describe <resource-type> <resource-name> -n algorythmos-ai-agents
 
 # Check events
-kubectl get events -n relay-clone --sort-by='.lastTimestamp'
+kubectl get events -n algorythmos-ai-agents --sort-by='.lastTimestamp'
 
 # Access pod shell
-kubectl exec -it <pod-name> -n relay-clone -- /bin/bash
+kubectl exec -it <pod-name> -n algorythmos-ai-agents -- /bin/bash
 ```
 
 ## 🧹 Cleanup
@@ -353,13 +353,13 @@ kubectl exec -it <pod-name> -n relay-clone -- /bin/bash
 
 ```bash
 # Using Helm
-helm uninstall relay-clone -n relay-clone
+helm uninstall algorythmos-ai-agents -n algorythmos-ai-agents
 
 # Using kubectl
-kubectl delete namespace relay-clone
+kubectl delete namespace algorythmos-ai-agents
 
 # Remove Kind cluster
-kind delete cluster --name relay-clone
+kind delete cluster --name algorythmos-ai-agents
 ```
 
 ## 📈 Production Recommendations

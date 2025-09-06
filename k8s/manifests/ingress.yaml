@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: relay-clone-ingress
-  namespace: relay-clone
+  name: algorythmos-ai-agents-ingress
+  namespace: algorythmos-ai-agents
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: relay-clone.local
+  - host: algorythmos-ai-agents.local
     http:
       paths:
       - path: /api
@@ -27,7 +27,7 @@ spec:
             name: web-service
             port:
               number: 3000
-  - host: api.relay-clone.local
+  - host: api.algorythmos-ai-agents.local
     http:
       paths:
       - path: /

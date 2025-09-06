@@ -31,7 +31,7 @@ export class EmailRunner {
 
     try {
       const mailOptions = {
-        from: process.env.MAIL_FROM || 'Relay Clone <noreply@local.dev>',
+        from: process.env.MAIL_FROM || 'Algorythmos AI Agents <noreply@local.dev>',
         to: resolvedTo,
         subject: resolvedSubject,
         html: resolvedHtml,

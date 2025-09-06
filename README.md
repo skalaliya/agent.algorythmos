@@ -1,4 +1,4 @@
-# 🚀 Relay Clone
+# 🚀 Algorythmos AI Agents
 
 > **AI-Powered Workflow Automation Platform**
 
@@ -9,7 +9,7 @@
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://docker.com)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-Ready-orange.svg)](https://kubernetes.io)
 
-Relay Clone is a modern, production-ready workflow automation platform that enables you to build, deploy, and scale AI-powered workflows with enterprise-grade reliability.
+Algorythmos AI Agents is a modern, production-ready workflow automation platform that enables you to build, deploy, and scale AI-powered workflows with enterprise-grade reliability.
 
 ## ✨ Features
 
@@ -78,8 +78,8 @@ graph TB
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/Agent.algorythmos.git
-cd Agent.algorythmos
+git clone https://github.com/your-username/algorythmos-ai-agents.git
+cd algorythmos-ai-agents
 
 # Copy environment template
 cp env.python.example .env
