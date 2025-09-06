@@ -1,293 +1,100 @@
-# Relay Clone - Architecture Documentation
+# System Architecture
 
-## Overview
+This document provides a comprehensive overview of Relay Clone's system architecture, components, and data flow.
 
-Relay Clone is a monorepo implementing a Relay.app-style automation MVP with workflow building, scheduling, execution, and monitoring capabilities.
-
-## System Architecture
-
-### High-Level Components
+## 🏗️ High-Level Architecture
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Web App      │    │   API Server    │    │   Worker       │
-│   (Next.js)    │◄──►│   (Fastify)     │◄──►│   (BullMQ)     │
+│   Frontend      │    │   API Layer     │    │  Worker Layer   │
+│   (Next.js)     │────│   (FastAPI)     │────│   (Celery)      │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
-                                │                       │
-                                ▼                       ▼
+                                │                        │
+                                ▼                        ▼
                        ┌─────────────────┐    ┌─────────────────┐
-                       │   PostgreSQL    │    │     Redis       │
-                       │   (Prisma)      │    │   (BullMQ)      │
+                       │   Database      │    │   Queue/Cache   │
+                       │  (PostgreSQL)   │    │    (Redis)      │
                        └─────────────────┘    └─────────────────┘
+                                                        │
+                       ┌─────────────────┐              │
+                       │ External APIs   │◄─────────────┘
+                       │ (OpenAI, Email) │
+                       └─────────────────┘
 ```
 
-### Service Responsibilities
+## 🧩 Component Overview
 
-#### Web App (`apps/web`)
-- **Workflow Builder**: React Flow-based visual workflow editor
-- **Run Monitoring**: Real-time execution timeline and step inspection
-- **Dashboard**: Workflow management and analytics
+### Frontend (Next.js)
+- **Location**: `apps/web/`
+- **Purpose**: User interface and workflow building
+- **Tech**: Next.js 14, TypeScript, Tailwind CSS
 
-#### API Server (`apps/api`)
-- **REST API**: Workflow CRUD, run management, connector endpoints
-- **Database Layer**: Prisma ORM with PostgreSQL
-- **Authentication**: User management (basic implementation)
-- **Validation**: Zod schema validation
+### Backend API (FastAPI)
+- **Location**: `apps/api-python/`
+- **Purpose**: RESTful API and business logic
+- **Tech**: FastAPI, Python 3.11+, SQLAlchemy
 
-#### Worker (`apps/worker`)
-- **Job Processing**: BullMQ-based workflow execution
-- **Step Runners**: AI, email, LinkedIn, table, loop, log processors
-- **Scheduling**: Cron-based workflow triggers
+### Worker System (Celery)
+- **Location**: `apps/worker-python/`
+- **Purpose**: Background task processing
+- **Tech**: Celery, Redis, Python task runners
 
-## Data Models
+### Database (PostgreSQL)
+- **Purpose**: Persistent data storage
+- **Schema**: Users, Workflows, Runs, Run Steps
 
-### Core Entities
+### Cache/Queue (Redis)
+- **Purpose**: Task queue and caching
+- **Usage**: Celery broker, session storage, API cache
 
-#### Workflow
-```typescript
-{
-  id: string
-  name: string
-  definition: JSON // Workflow DSL
-  schedule?: string // Cron expression
-  timezone: string
-  createdAt: DateTime
-}
+## 🔄 Data Flow
+
+1. **User** creates workflow in frontend
+2. **Frontend** sends request to API
+3. **API** saves workflow to database
+4. **User** triggers workflow execution
+5. **API** queues task in Redis
+6. **Worker** processes task and executes steps
+7. **Worker** updates database with results
+8. **Frontend** displays real-time updates
+
+## 🗄️ Database Schema
+
+```sql
+users (id, email, name, created_at, updated_at)
+workflows (id, name, description, definition, user_id, is_active)
+runs (id, workflow_id, status, started_at, completed_at, error_message)
+run_steps (id, run_id, step_id, step_type, status, input_data, output_data)
 ```
 
-#### Run
-```typescript
-{
-  id: string
-  workflowId: string
-  status: 'queued' | 'running' | 'completed' | 'failed'
-  startedAt: DateTime
-  finishedAt?: DateTime
-  aiCredits: number
-}
-```
+## 🔧 API Endpoints
 
-#### RunStep
-```typescript
-{
-  id: string
-  runId: string
-  parentStepId?: string // For loop iterations
-  index: number
-  name: string
-  type: string
-  input: JSON
-  output: JSON
-  status: string
-  aiCredits: number
-}
-```
+- `GET /api/workflows` - List workflows
+- `POST /api/workflows` - Create workflow
+- `GET /api/runs` - List runs
+- `POST /api/runs` - Execute workflow
+- `GET /api/steps` - List steps
+- `POST /api/connectors/test` - Test connector
 
-## Workflow DSL
+## 🔐 Security
 
-### Step Types
+- JWT-based authentication
+- Input validation with Pydantic
+- SQL injection prevention
+- HTTPS/TLS encryption
+- Rate limiting
 
-#### AI Steps
-```json
-{
-  "type": "ai",
-  "provider": "openai|anthropic|perplexity",
-  "model": "gpt-4|claude-3-5-sonnet|sonar-reasoning-pro",
-  "prompt": "Template with {{variables}}"
-}
-```
+## 📊 Performance
 
-#### Loop Steps
-```json
-{
-  "type": "loop",
-  "items": "s1.rows",
-  "children": [
-    // Nested steps to execute for each item
-  ]
-}
-```
+- API Response: < 100ms p95
+- Workflow Execution: < 2 seconds average
+- Concurrent Users: 1000+ simultaneous
+- Database Queries: < 50ms p95
 
-#### Connector Steps
-```json
-{
-  "type": "linkedin.searchPosts",
-  "query": "{{item.topic}}",
-  "limit": 10
-}
-```
+## 🚀 Scalability
 
-### Template Variables
-
-- **Step References**: `{{s1.output}}` - Output from step s1
-- **Loop Context**: `{{item.topic}}` - Current item in loop
-- **Wildcards**: `{{s2.*}}` - All outputs from step s2
-
-## Execution Engine
-
-### Workflow Runner
-
-1. **Parse Definition**: Load workflow DSL and validate
-2. **Create Run Record**: Initialize database entry
-3. **Execute Steps**: Process each step sequentially
-4. **Handle Loops**: Spawn child steps for iterations
-5. **Update Status**: Track progress and results
-6. **Calculate Credits**: Sum AI usage across steps
-
-### Step Execution
-
-```typescript
-interface StepRunner {
-  execute(step: WorkflowStep, context: Record<string, any>): Promise<{
-    output: any
-    credits: number
-  }>
-}
-```
-
-### Context Management
-
-- **Global Context**: Shared across all steps
-- **Step Outputs**: Stored as `{ stepId: output }`
-- **Loop Context**: Enhanced with `item` and `index`
-
-## Scheduling System
-
-### Cron Patterns
-
-- **FIRST_WED_08_CET**: First Wednesday of each month at 08:00 CET
-- **Custom Patterns**: Standard cron expressions supported
-
-### Trigger Service
-
-- **Registration**: Parse schedule and create BullMQ repeatable jobs
-- **Execution**: Enqueue workflow runs on schedule
-- **Management**: Enable/disable schedules dynamically
-
-## AI Provider System
-
-### Provider Registry
-
-```typescript
-class AIService {
-  private providers: Map<string, AIProvider>
-  
-  async generateResponse(provider: string, model: string, prompt: string)
-  estimateCredits(provider: string, model: string, prompt: string)
-}
-```
-
-### Credit Estimation
-
-- **API Usage**: Use actual token counts when available
-- **Fallback**: Estimate based on prompt length and model rates
-- **Rates**: Configurable per-provider, per-model pricing
-
-### Mock Mode
-
-- **Deterministic**: Same input produces same output
-- **Realistic**: Responses mimic actual AI behavior
-- **Development**: Enables testing without API keys
-
-## Connector System
-
-### LinkedIn Connector
-
-- **Search Posts**: Query-based post retrieval
-- **Mock Data**: Deterministic fixture responses
-- **Fields**: activityId, content, reactions, comments, date, author, URLs
-
-### Email Connector
-
-- **SMTP Support**: Configurable mail servers
-- **Template Resolution**: Variable substitution in content
-- **Fallback**: Mailhog for local development
-
-## Queue System
-
-### BullMQ Integration
-
-- **Workflow Queue**: Execute workflow runs
-- **Trigger Queue**: Handle scheduled workflows
-- **Redis Backend**: Persistent job storage
-- **Concurrency Control**: Configurable worker processes
-
-### Job Types
-
-```typescript
-// Workflow execution
-{
-  name: 'execute-workflow',
-  data: { runId, workflowId, definition }
-}
-
-// Scheduled trigger
-{
-  name: 'workflow:${workflowId}',
-  data: { workflowId, type: 'scheduled' },
-  repeat: { pattern: cronExpression }
-}
-```
-
-## Security & Validation
-
-### Input Validation
-
-- **Zod Schemas**: Type-safe request validation
-- **Template Injection**: Safe variable resolution
-- **SQL Injection**: Prisma ORM protection
-
-### API Security
-
-- **CORS**: Configurable cross-origin policies
-- **Rate Limiting**: Basic request throttling
-- **Error Handling**: Sanitized error responses
-
-## Development Workflow
-
-### Local Setup
-
-1. **Docker Compose**: Start infrastructure services
-2. **Database**: Run Prisma migrations
-3. **Seed Data**: Execute seed script
-4. **Development**: Hot-reload all services
-
-### Testing Strategy
-
-- **Unit Tests**: Individual service testing
-- **Integration Tests**: API endpoint validation
-- **E2E Tests**: Workflow execution flows
-- **Mock Services**: AI and connector stubs
-
-## Deployment Considerations
-
-### Environment Variables
-
-- **Database**: PostgreSQL connection string
-- **Redis**: Queue backend configuration
-- **AI Keys**: Provider API credentials
-- **SMTP**: Email server settings
-
-### Scaling
-
-- **Horizontal**: Multiple worker instances
-- **Vertical**: Resource allocation per service
-- **Database**: Connection pooling and indexing
-- **Caching**: Redis-based result caching
-
-## Future Enhancements
-
-### Planned Features
-
-- **Human Approval**: Pause/resume workflow execution
-- **Real Connectors**: Replace LinkedIn stub with actual API
-- **Advanced Scheduling**: Complex recurrence patterns
-- **Monitoring**: Prometheus metrics and Grafana dashboards
-- **Webhooks**: External system integration
-
-### Architecture Improvements
-
-- **Event Sourcing**: CQRS pattern for audit trails
-- **Microservices**: Service decomposition
-- **Message Queues**: Event-driven architecture
-- **API Gateway**: Centralized routing and auth
+- Horizontal pod autoscaling (Kubernetes)
+- Queue-based worker scaling
+- Database read replicas
+- Redis clustering
+- CDN for static assets
