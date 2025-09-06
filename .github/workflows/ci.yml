@@ -15,7 +15,7 @@ jobs:
         image: postgres:15
         env:
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: algorythmosaiagents
+          POSTGRES_DB: algorythmos
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -52,12 +52,12 @@ jobs:
     - name: Run database migrations
       run: npm run prisma:migrate
       env:
-        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/algorythmosaiagents
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/algorythmos
 
     - name: Seed database
       run: npm run seed
       env:
-        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/algorythmosaiagents
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/algorythmos
 
     - name: Lint
       run: npm run lint
@@ -76,12 +76,12 @@ jobs:
         npm run dev &
         sleep 10
       env:
-        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/algorythmosaiagents
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/algorythmos
         REDIS_URL: redis://localhost:6379
 
     - name: Run smoke tests
       run: npm run smoke
       env:
-        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/algorythmosaiagents
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/algorythmos
         REDIS_URL: redis://localhost:6379
         NEXT_PUBLIC_API_URL: http://localhost:8080

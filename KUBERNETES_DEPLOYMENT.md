@@ -323,7 +323,7 @@ rules:
 
 3. **Database Connection Issues**
    ```bash
-   kubectl exec -n algorythmos-ai-agents deployment/postgres -- psql -U postgres -d algorythmosaiagents -c "SELECT 1;"
+   kubectl exec -n algorythmos-ai-agents deployment/postgres -- psql -U postgres -d algorythmos -c "SELECT 1;"
    ```
 
 4. **Redis Connection Issues**

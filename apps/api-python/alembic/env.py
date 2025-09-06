@@ -31,7 +31,7 @@ target_metadata = Base.metadata
 
 
 def get_url():
-    return os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/algorythmosaiagents")
+    return os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/algorythmos")
 
 
 def run_migrations_offline() -> None:

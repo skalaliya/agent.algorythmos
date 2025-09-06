@@ -220,7 +220,7 @@ Create a `.env` file with the following variables:
 
 ```bash
 # Database
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/algorythmosaiagents
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/algorythmos
 
 # Redis
 REDIS_URL=redis://localhost:6379/0
@@ -322,7 +322,7 @@ kill -9 <PID>
 docker-compose logs db
 
 # Test connection
-docker-compose exec db psql -U postgres -d algorythmosaiagents -c "SELECT 1;"
+docker-compose exec db psql -U postgres -d algorythmos -c "SELECT 1;"
 ```
 
 #### API Key Issues
